@@ -38,6 +38,14 @@ git fetch origin "$BRANCH" || true
 git checkout "$BRANCH"
 git pull --rebase origin "$BRANCH" || true
 
+# 确保在 systemd 环境下也有提交身份
+if [[ -n "${GIT_USER_NAME:-}" ]]; then
+  git config user.name "$GIT_USER_NAME"
+fi
+if [[ -n "${GIT_USER_EMAIL:-}" ]]; then
+  git config user.email "$GIT_USER_EMAIL"
+fi
+
 TMP=$(mktemp)
 sqlite3 -json "$KOMARI_DB" "select name, ipv4, ipv6, updated_at from clients where (ipv4 is not null and ipv4!='') or (ipv6 is not null and ipv6!='') order by name asc;" > "$TMP"
 
