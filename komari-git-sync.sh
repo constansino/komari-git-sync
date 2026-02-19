@@ -51,7 +51,7 @@ cat > "$SNAPSHOT_FILE" <<JSON
 JSON
 rm -f "$TMP"
 
-if git diff --quiet -- "$SNAPSHOT_FILE"; then
+if [[ -z "$(git status --porcelain -- "$SNAPSHOT_FILE")" ]]; then
   log "no changes"
   exit 0
 fi
