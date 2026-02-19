@@ -13,7 +13,7 @@
 - `komari-git-sync.sh`：主同步脚本
 - `komari-git-sync.env.example`：环境变量示例
 - `komari-git-sync.service`：systemd 服务
-- `komari-git-sync.timer`：systemd 定时器（默认每5分钟）
+- `komari-git-sync.timer`：systemd 定时器（默认每1小时）
 
 ---
 
@@ -108,7 +108,8 @@ sudo tail -n 100 /var/log/komari-git-sync.log
 修改 `komari-git-sync.timer` 的 `OnUnitActiveSec`，例如：
 
 ```ini
-OnUnitActiveSec=15min
+OnUnitActiveSec=30min
+# 或 2h / 6h / 1d
 ```
 
 然后：
