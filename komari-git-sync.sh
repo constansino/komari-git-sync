@@ -12,6 +12,7 @@ ENV_FILE="/etc/komari-git-sync.env"
 : "${WORKDIR:=/data/komari-monitor/git-sync}"
 : "${BRANCH:=main}"
 : "${SNAPSHOT_FILE:=nodes-ip.json}"
+: "${DB_SNAPSHOT_FILE:=komari.db}"
 : "${SYNC_LOG:=/var/log/komari-git-sync.log}"
 
 log(){ echo "[$(date '+%F %T')] $*" | tee -a "$SYNC_LOG"; }
@@ -59,12 +60,15 @@ cat > "$SNAPSHOT_FILE" <<JSON
 JSON
 rm -f "$TMP"
 
-if [[ -z "$(git status --porcelain -- "$SNAPSHOT_FILE")" ]]; then
+# 同步完整数据库快照
+cp -f "$KOMARI_DB" "$DB_SNAPSHOT_FILE"
+
+if [[ -z "$(git status --porcelain -- "$SNAPSHOT_FILE" "$DB_SNAPSHOT_FILE")" ]]; then
   log "no changes"
   exit 0
 fi
 
-git add "$SNAPSHOT_FILE"
-git commit -m "chore(komari): sync node ips $(date '+%F %T')"
+git add "$SNAPSHOT_FILE" "$DB_SNAPSHOT_FILE"
+git commit -m "chore(komari): sync nodes snapshot + full db $(date '+%F %T')"
 git push origin "$BRANCH"
 log "synced to git"

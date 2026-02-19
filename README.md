@@ -22,7 +22,8 @@
 1. 从 Komari 的 sqlite 数据库读取 `clients` 表
 2. 提取 `name / ipv4 / ipv6 / updated_at`
 3. 生成 `nodes-ip.json`
-4. 检测文件变化，有变化才 `git add/commit/push`
+4. 同步导出完整数据库快照 `komari.db`
+5. 检测文件变化，有变化才 `git add/commit/push`
 
 ---
 
